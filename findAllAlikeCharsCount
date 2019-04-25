@@ -1,0 +1,41 @@
+typealias AlphaDictionary = [String : Int]
+
+func getAlphabetsWithZeroCount() -> AlphaDictionary {
+    let alphabet = [
+        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+
+    var alphaDictionary = [String: Int]()
+    for a in alphabet {
+        alphaDictionary[a] = 0
+    }
+    return alphaDictionary
+}
+
+func createAlphabetsHistogram(_ s: String) -> AlphaDictionary {
+    var tempDict = getAlphabetsWithZeroCount()
+    for c in s {
+        if let i = tempDict[String(c)] {
+            tempDict[String(c)] = i + 1
+        }
+    }
+    return tempDict
+}
+
+func findAllAlikeCharsCount(parent p: String, _ childrens: String...) -> Int {
+    let l = createAlphabetsHistogram(p)
+    var result = getAlphabetsWithZeroCount()
+   
+    for s in childrens {
+        let r = createAlphabetsHistogram(s)
+        for (index, value) in l { //O(c)
+            if let lVal = l[index], let rVal = r[index] {
+                result[String(value)] = min(lVal, rVal)
+            }
+        }
+    }
+    return result.reduce(0) {
+        $0 + $1.value
+    }
+}
+
+print(findAllAlikeCharsCount(parent:"aab", "aab", ""))
